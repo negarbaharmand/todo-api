@@ -1,6 +1,6 @@
 package com.baharmand.todoapi.startup;
 
-import com.baharmand.todoapi.entity.Role;
+import com.baharmand.todoapi.domain.entity.Role;
 import com.baharmand.todoapi.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;

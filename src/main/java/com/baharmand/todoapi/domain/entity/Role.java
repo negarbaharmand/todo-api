@@ -1,4 +1,4 @@
-package com.baharmand.todoapi.entity;
+package com.baharmand.todoapi.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

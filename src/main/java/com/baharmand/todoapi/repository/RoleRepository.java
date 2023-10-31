@@ -1,6 +1,6 @@
 package com.baharmand.todoapi.repository;
 
-import com.baharmand.todoapi.entity.Role;
+import com.baharmand.todoapi.domain.entity.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
