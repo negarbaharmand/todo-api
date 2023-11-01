@@ -1,9 +1,20 @@
 package com.baharmand.todoapi.domain.entity;
 
+import lombok.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import jakarta.persistence.*;
 
 import java.util.HashSet;
 import java.util.Set;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString(exclude = "roles")
+@EqualsAndHashCode
+
 
 @Entity
 public class User {
@@ -26,7 +37,17 @@ public class User {
 
     public User(String email, String password) {
         this.email = email;
-        this.password = password;
+        setPassword(password);
+    }
+
+    public void setPassword(String password) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        this.password = passwordEncoder.encode(password);
+    }
+
+    public boolean isPasswordValid(String password) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        return passwordEncoder.matches(password, this.password);
     }
 
     public void addRole(Role role) {
