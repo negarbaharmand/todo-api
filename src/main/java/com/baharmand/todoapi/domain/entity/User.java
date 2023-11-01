@@ -37,17 +37,7 @@ public class User {
 
     public User(String email, String password) {
         this.email = email;
-        setPassword(password);
-    }
-
-    public void setPassword(String password) {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-        this.password = passwordEncoder.encode(password);
-    }
-
-    public boolean isPasswordValid(String password) {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-        return passwordEncoder.matches(password, this.password);
+        this.password = password;
     }
 
     public void addRole(Role role) {

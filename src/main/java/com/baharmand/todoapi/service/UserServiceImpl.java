@@ -11,6 +11,7 @@ import com.baharmand.todoapi.exception.DataDuplicateException;
 import com.baharmand.todoapi.exception.DataNotFoundException;
 import com.baharmand.todoapi.repository.RoleRepository;
 import com.baharmand.todoapi.repository.UserRepository;
+import com.baharmand.todoapi.utility.CustomPasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
@@ -25,10 +26,10 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
     private final UserConverter userConverter;
     private final RoleConverter roleConverter;
-    private final BCryptPasswordEncoder passwordEncoder; // Inject BCryptPasswordEncoder
+    private final CustomPasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, RoleConverter roleConverter, UserConverter userConverter, BCryptPasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, RoleConverter roleConverter, UserConverter userConverter, CustomPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.userConverter = userConverter;
@@ -91,9 +92,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void disableByEmail(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new DataNotFoundException("User with email " + email + " not found."));
-        user.setExpired(true);
-        userRepository.save(user);
+       userRepository.updateExpiredByEmail(email, true);
     }
 
     @Override
