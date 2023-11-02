@@ -27,13 +27,22 @@ public class UserConverterImpl implements UserConverter {
         UserDTOView dtoView = new UserDTOView();
         dtoView.setEmail(entity.getEmail());
 
-        Set<RoleDTOView> roles = entity.getRoles()
+        /*Set<RoleDTOView> roles = entity.getRoles()
                 .stream()
                 .map(roleConverter::toRoleDTOView)
                 .collect(Collectors.toSet());
 
-        dtoView.setRoles(roles);
+        dtoView.setRoles(roles);*/
 
+        Set<RoleDTOView> roles = entity.getRoles()
+                .stream()
+                .map(
+                        role -> RoleDTOView.builder()
+                                .id(role.getId())
+                                .name(role.getName())
+                                .build())
+                .collect(Collectors.toSet());
+        dtoView.setRoles(roles);
         return dtoView;
     }
 

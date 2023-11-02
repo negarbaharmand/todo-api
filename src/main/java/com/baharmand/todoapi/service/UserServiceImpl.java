@@ -67,17 +67,30 @@ public class UserServiceImpl implements UserService {
         User savedUser = userRepository.save(user);
 
         // Convert saved user to DTO with roles
-        UserDTOView dtoView = new UserDTOView();
+       /* UserDTOView dtoView = new UserDTOView();
         dtoView.setEmail(savedUser.getEmail());
-
+           ToDo: Which way is easier?:
         // Convert and set roles in the DTO
         Set<RoleDTOView> roleDTOViewList = savedUser.getRoles()
                 .stream()
                 .map(roleConverter::toRoleDTOView)
                 .collect(Collectors.toSet());
-        dtoView.setRoles(roleDTOViewList);
+        dtoView.setRoles(roleDTOViewList);*/
 
-        return dtoView;
+        Set<RoleDTOView> roleDTOViewList = savedUser.getRoles()
+                .stream()
+                .map(
+                        role -> RoleDTOView.builder()
+                                .id(role.getId())
+                                .name(role.getName())
+                                .build())
+                .collect(Collectors.toSet());
+
+
+        return UserDTOView.builder()
+                .email(savedUser.getEmail())
+                .roles(roleDTOViewList)
+                .build();
     }
 
     @Override
@@ -86,20 +99,24 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new DataNotFoundException("User with email " + email + " not found."));
 
         UserDTOView dtoView = userConverter.toUserDTOView(user);
-
         return dtoView;
     }
 
     @Override
     public void disableByEmail(String email) {
-       userRepository.updateExpiredByEmail(email, true);
+        isEmailTaken(email);
+        userRepository.updateExpiredByEmail(email, true);
     }
 
     @Override
     public void enableByEmail(String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new DataNotFoundException("User with email " + email + " not found."));
-        user.setExpired(false);
-        userRepository.save(user);
+        isEmailTaken(email);
+        userRepository.updateExpiredByEmail(email, false);
+
+    }
+
+    private void isEmailTaken(String email) {
+        if (!userRepository.existsByEmail(email))
+            throw new DataNotFoundException("Email does not exist.");
     }
 }
