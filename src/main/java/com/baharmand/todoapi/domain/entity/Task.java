@@ -22,9 +22,16 @@ public class Task {
     private String title;
     private String description;
     private LocalDate deadline;
+    @Column(columnDefinition = "BOOLEAN DEFAULT FALSE")
     private boolean done;
 
     @ManyToOne
     @JoinColumn(name = "person_id")
     private Person person;
+
+    public Task(String title, String description, LocalDate deadline) {
+        this.title = title;
+        this.description = description;
+        this.deadline = deadline;
+    }
 }

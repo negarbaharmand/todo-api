@@ -13,7 +13,7 @@ import java.util.Optional;
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
-    Optional<Task> findByTitleContains(String title);
+    List<Task> findByTitleContains(String title);
 
     // First way:
     @Query("select t from Task t where t.person.id = :personId")
