@@ -12,7 +12,7 @@ import java.util.Objects;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(exclude = "tasks, user")
+@EqualsAndHashCode(exclude = {"tasks", "user"})
 
 @Entity
 public class Person {
@@ -31,6 +31,11 @@ public class Person {
 
     public Person(String name) {
         this.name = name;
+    }
+
+    public Person(String name, User user) {
+        this.name = name;
+        this.user = user;
     }
 
     public void addTask(Task... tasks) {
