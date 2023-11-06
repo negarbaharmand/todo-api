@@ -17,6 +17,7 @@ import java.util.Set;
 
 
 @Entity
+@Table(name = "_user")
 public class User {
 
     @Id
