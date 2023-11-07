@@ -1,6 +1,7 @@
 package com.baharmand.todoapi.repository;
 
 import com.baharmand.todoapi.domain.entity.User;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,11 @@ public class UserRepositoryTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+
+    EntityManager entityManager;
+
 
     User user;
     String email = "user@gmail.com";
@@ -43,12 +49,14 @@ public class UserRepositoryTest {
     }
 
     @Test
-    public void testUpdatePasswordByEmail(){
-        User user1 = new User("user@", "546");
+    public void testUpdatePasswordByEmail() {
+        User user1 = new User("user1@gmail.com", "546");
         userRepository.save(user1);
-        userRepository.updatePasswordByEmail("user@", "123");
-        Optional<User> updatedUser = userRepository.findByEmail("user@");
+        entityManager.flush();
+        entityManager.clear();
+        userRepository.updatePasswordByEmail("user1@gmail.com", "123");
+        Optional<User> updatedUser = userRepository.findByEmail("user1@gmail.com");
         assertTrue(updatedUser.isPresent());
-        //assertEquals("123", updatedUser.get().getPassword());
+        assertEquals("123", updatedUser.get().getPassword());
     }
 }
