@@ -13,9 +13,8 @@ import com.baharmand.todoapi.repository.RoleRepository;
 import com.baharmand.todoapi.repository.UserRepository;
 import com.baharmand.todoapi.utility.CustomPasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -38,6 +37,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserDTOView register(UserDTOForm userDTOForm) {
         if (userDTOForm == null) {
             throw new IllegalArgumentException("User form is null.");
@@ -103,12 +103,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void disableByEmail(String email) {
         isEmailTaken(email);
         userRepository.updateExpiredByEmail(email, true);
     }
 
     @Override
+    @Transactional
     public void enableByEmail(String email) {
         isEmailTaken(email);
         userRepository.updateExpiredByEmail(email, false);
