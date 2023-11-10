@@ -1,5 +1,7 @@
 package com.baharmand.todoapi.service;
 
+import com.baharmand.todoapi.domain.dto.PersonDTOForm;
+import com.baharmand.todoapi.domain.dto.PersonDTOView;
 import com.baharmand.todoapi.domain.entity.Person;
 import com.baharmand.todoapi.domain.entity.Task;
 import com.baharmand.todoapi.domain.entity.User;
@@ -8,6 +10,7 @@ import com.baharmand.todoapi.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -21,9 +24,13 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public Person createPerson(String name, User user) {
-        Person person = new Person(name, user);
-        return personRepository.save(person);
+    public PersonDTOView createPerson(PersonDTOForm personDTOForm) {
+        if (personDTOForm == null) throw new IllegalArgumentException("person form is null.");
+        Person person = new Person(personDTOForm.getName(), personDTOForm.getUser());
+        return PersonDTOView.builder()
+                .name(person.getName())
+                .user(person.getUser())
+                .build();
     }
 
     @Override
@@ -33,8 +40,16 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public List<Person> getAllPersons() {
-        return personRepository.findAll();
+    public List<PersonDTOView> getAllPersons() {
+        List<Person> people = personRepository.findAll();
+        List<PersonDTOView> personDTOList = new ArrayList<>();
+        for (Person entity : people) {
+            personDTOList.add(PersonDTOView.builder()
+                    .name(entity.getName())
+                    .user(entity.getUser())
+                    .build());
+        }
+        return personDTOList;
     }
 
     @Override
