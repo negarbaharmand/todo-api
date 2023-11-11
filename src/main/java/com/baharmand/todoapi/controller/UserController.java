@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import com.baharmand.todoapi.domain.dto.UserDTOView;
 import org.springframework.web.bind.annotation.*;
 
-
+@CrossOrigin(origins = "http://localhost:3000") // Replace with your frontend URL
 @RequestMapping("/api/v1/users")
 @RestController //RestController annotation is to create RESTful web services
 public class UserController {
