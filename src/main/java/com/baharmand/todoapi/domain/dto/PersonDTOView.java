@@ -8,6 +8,6 @@ import lombok.Data;
 @Data
 @Builder
 public class PersonDTOView {
+    private Long id;
     private String name;
-    private User user;
 }

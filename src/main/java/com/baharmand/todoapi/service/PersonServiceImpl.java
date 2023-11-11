@@ -3,12 +3,11 @@ package com.baharmand.todoapi.service;
 import com.baharmand.todoapi.domain.dto.PersonDTOForm;
 import com.baharmand.todoapi.domain.dto.PersonDTOView;
 import com.baharmand.todoapi.domain.entity.Person;
-import com.baharmand.todoapi.domain.entity.Task;
-import com.baharmand.todoapi.domain.entity.User;
 import com.baharmand.todoapi.exception.DataNotFoundException;
 import com.baharmand.todoapi.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,19 +23,21 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
+    @Transactional
     public PersonDTOView createPerson(PersonDTOForm personDTOForm) {
         if (personDTOForm == null) throw new IllegalArgumentException("person form is null.");
-        Person person = new Person(personDTOForm.getName(), personDTOForm.getUser());
+        Person person = new Person(personDTOForm.getName());
+        Person savedPerson = personRepository.save(person);
         return PersonDTOView.builder()
+                .id(savedPerson.getId())
                 .name(person.getName())
-                .user(person.getUser())
                 .build();
     }
 
     @Override
-    public Person getPersonById(Long id) {
-        return personRepository.findById(id)
-                .orElseThrow(() -> new DataNotFoundException("Person not found with id: " + id));
+    public PersonDTOView getPersonById(Long id) {
+        Person person = personRepository.findById(id).orElseThrow(() -> new DataNotFoundException("Person not found with id: " + id));
+        return PersonDTOView.builder().id(person.getId()).name(person.getName()).build();
     }
 
     @Override
@@ -45,42 +46,30 @@ public class PersonServiceImpl implements PersonService {
         List<PersonDTOView> personDTOList = new ArrayList<>();
         for (Person entity : people) {
             personDTOList.add(PersonDTOView.builder()
+                    .id(entity.getId())
                     .name(entity.getName())
-                    .user(entity.getUser())
                     .build());
         }
         return personDTOList;
     }
 
+
     @Override
-    public void addTaskToPerson(Person person, Task task) {
-        person.addTask(task);
-        personRepository.save(person);
+    @Transactional
+    public PersonDTOView update(PersonDTOForm personDTOForm) {
+        Person person = personRepository.findById(personDTOForm.getId()).orElseThrow(() -> new DataNotFoundException("Person Id is not valid."));
+        return PersonDTOView.builder()
+                .id(person.getId())
+                .name(person.getName())
+                .build();
     }
 
     @Override
-    public void removeTaskFromPerson(Person person, Task task) {
-        person.removeTask(task);
-        personRepository.save(person);
-    }
-
-    @Override
-    public Person updatePersonInformation(Long id, String name, User user) {
-        Person person = getPersonById(id);
-        person.setName(name);
-        person.setUser(user);
-        return personRepository.save(person);
-    }
-
-    @Override
+    @Transactional
     public void deletePersonById(Long id) {
-        Person person = getPersonById(id);
+        Person person = personRepository.findById(id).orElseThrow(() -> new DataNotFoundException("Person id is not valid."));
         personRepository.delete(person);
     }
 
-    @Override
-    public boolean isPersonIdle(Long id) {
-        Person person = getPersonById(id);
-        return person.getTasks().isEmpty();
-    }
+
 }

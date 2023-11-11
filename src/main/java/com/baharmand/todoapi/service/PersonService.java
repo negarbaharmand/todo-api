@@ -1,5 +1,7 @@
 package com.baharmand.todoapi.service;
 
+import com.baharmand.todoapi.domain.dto.PersonDTOForm;
+import com.baharmand.todoapi.domain.dto.PersonDTOView;
 import com.baharmand.todoapi.domain.entity.Person;
 import com.baharmand.todoapi.domain.entity.Task;
 import com.baharmand.todoapi.domain.entity.User;
@@ -8,21 +10,16 @@ import java.util.List;
 
 public interface PersonService {
 
-    Person createPerson(String name, User user);
+    PersonDTOView createPerson(PersonDTOForm personDTOForm);
 
-    Person getPersonById(Long id);
+    PersonDTOView getPersonById(Long id);
 
-    List<Person> getAllPersons();
+    List<PersonDTOView> getAllPersons();
 
-    void addTaskToPerson(Person person, Task task);
-
-    void removeTaskFromPerson(Person person, Task task);
-
-    Person updatePersonInformation(Long id, String name, User user);
+    PersonDTOView update(PersonDTOForm personDTOForm);
 
     void deletePersonById(Long id);
 
-    boolean isPersonIdle(Long id);
 }
 
 
