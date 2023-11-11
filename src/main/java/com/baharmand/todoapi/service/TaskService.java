@@ -1,22 +1,26 @@
 package com.baharmand.todoapi.service;
 
-import com.baharmand.todoapi.domain.entity.Task;
+import com.baharmand.todoapi.domain.dto.TaskDTOForm;
+import com.baharmand.todoapi.domain.dto.TaskDTOView;
+
 
 import java.time.LocalDate;
 import java.util.List;
 
 public interface TaskService {
-    List<Task> getTasksWithTitle(String title);
+    TaskDTOView create(TaskDTOForm taskDTOForm);
 
-    List<Task> getTasksByPersonId(Long personId);
+    TaskDTOView findById(Long todoItemId);
 
-    List<Task> getTasksByDone(boolean done);
+    void update(TaskDTOForm taskDTOForm);
 
-    List<Task> getTasksBetweenDates(LocalDate startDate, LocalDate endDate);
+    void delete(Long id);
 
-    List<Task> getTasksByDeadline(LocalDate deadline);
+    List<TaskDTOView> findTasksByPersonId(Long personId);
 
-    List<Task> getTasksWithNoAssignee();
+    List<TaskDTOView> findTasksBetweenStartAndEndDate(LocalDate start, LocalDate end);
 
-    List<Task> getIncompleteTasks();
+    List<TaskDTOView> findAllUnassignedTodoItems();
+
+    List<TaskDTOView> findAllUnfinishedAndOverdue();
 }

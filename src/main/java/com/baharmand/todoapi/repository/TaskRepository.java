@@ -31,5 +31,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> findByPersonIsNull();
 
     List<Task> findByDoneFalse();
+    @Query("select t from Task t where t.done = false and current_date > t.deadline ")
+    List<Task> selectUnFinishedAndOverdueTasks();
 
 }
